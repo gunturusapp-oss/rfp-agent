@@ -44,28 +44,36 @@ if 'processor' not in st.session_state:
 st.markdown('<h1 class="main-header">⚡ Vela AI</h1>', unsafe_allow_html=True)
 st.markdown('<p class="tagline">AI-Powered Proposal Generation in Minutes, Not Hours</p>', unsafe_allow_html=True)
 
-# Sidebar
-st.sidebar.header("Client Portal")
-
-clients = st.session_state.db.get_all_active_clients()
-client_ids = list(clients.keys())
-
-if client_ids:
-    selected_client_id = st.sidebar.selectbox(
-        "Select Client",
-        client_ids,
-        format_func=lambda x: clients[x]['company_name']
-    )
+# Sidebar - Client Management
+with st.sidebar:
+    st.header("Client Portal")
     
-    client = clients[selected_client_id]
+    clients = database.get_all_clients()
     
-    st.sidebar.markdown(f"**Company:** {client['company_name']}")
-    st.sidebar.markdown(f"**Tier:** {client['service_tier'].replace('_', ' ').title()}")
-    st.sidebar.markdown(f"**RFPs Processed:** {client['rfps_processed']}")
+    # Add Client Form
+    st.subheader("➕ Add New Client")
+    with st.form("add_client_form"):
+        new_client_name = st.text_input("Client Name", placeholder="ABC Construction")
+        new_client_email = st.text_input("Contact Email", placeholder="john@abc.com")
+        submit_client = st.form_submit_button("Add Client")
+        
+        if submit_client:
+            if new_client_name and new_client_email:
+                database.add_client(new_client_name, new_client_email)
+                st.success(f"✅ Added {new_client_name}!")
+                st.rerun()
+            else:
+                st.error("Please fill in both fields")
     
-else:
-    st.sidebar.warning("No clients in database. Add a test client first.")
-    selected_client_id = None
+    st.divider()
+    
+    # Show existing clients
+    if clients:
+        st.success(f"📊 {len(clients)} clients in database")
+        for client in clients:
+            st.write(f"• {client['name']} ({client['email']})")
+    else:
+        st.info("No clients yet. Add your first client above!")
 
 # Main area
 st.header("Upload RFP Document")
