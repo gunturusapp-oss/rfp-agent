@@ -4,17 +4,22 @@ Client-facing demo application
 """
 
 import streamlit as st
-import os
-from datetime import datetime
 from rfp_processor_v2 import RFPProcessor
 from client_database import ClientDatabase
+import os
 
 # Page config
 st.set_page_config(
-    page_title="Vela AI - RFP Intelligence",
+    page_title="Vela AI - RFP Intelligence Engine",
     page_icon="⚡",
     layout="wide"
 )
+
+# Initialize database
+database = ClientDatabase()
+
+# Initialize RFP processor
+processor = RFPProcessor()
 
 # Custom CSS
 st.markdown("""
