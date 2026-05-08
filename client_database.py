@@ -34,26 +34,23 @@ class ClientDatabase:
         with open(self.db_path, 'w') as f:
             json.dump(self.clients, f, indent=2)
     
-    def add_client(self, client_id, company_name, email, service_tier, industry):
-        """
-        Add new client to database
-        
-        service_tier: 'rfp_only', 'bundle', 'full_stack'
-        """
-        self.clients[client_id] = {
-            'company_name': company_name,
-            'email': email,
-            'service_tier': service_tier,
-            'industry': industry,
-            'created_date': datetime.now().isoformat(),
-            'rfps_processed': 0,
-            'blogs_written': 0,
-            'leads_generated': 0,
-            'status': 'active',
-            'past_wins': [],  # Store successful RFP examples
-            'brand_voice': '',  # Their writing style
-            'key_contacts': []  # Decision makers
-        }
+def add_client(self, name, email, service_tier="Standard", industry="Construction"):
+    """Add a new client with optional service tier and industry"""
+    data = self._load_data()
+    client_id = len(data['clients']) + 1
+    
+    client = {
+        'id': client_id,
+        'name': name,
+        'email': email,
+        'service_tier': service_tier,
+        'industry': industry,
+        'created_at': datetime.now().isoformat()
+    }
+    
+    data['clients'].append(client)
+    self._save_data(data)
+    return client
         
         # Create client folder
         client_folder = os.path.expanduser(f"~/rfp-agent/data/client_files/{client_id}")
