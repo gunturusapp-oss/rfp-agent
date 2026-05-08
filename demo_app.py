@@ -48,8 +48,6 @@ st.markdown('<p class="tagline">AI-Powered Proposal Generation in Minutes, Not H
 with st.sidebar:
     st.header("Client Portal")
     
-    clients = database.get_all_clients()
-    
     # Add Client Form
     st.subheader("➕ Add New Client")
     with st.form("add_client_form"):
@@ -59,22 +57,28 @@ with st.sidebar:
         
         if submit_client:
             if new_client_name and new_client_email:
-                database.add_client(new_client_name, new_client_email)
-                st.success(f"✅ Added {new_client_name}!")
-                st.rerun()
+                try:
+                    database.add_client(new_client_name, new_client_email)
+                    st.success(f"✅ Added {new_client_name}!")
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Error adding client: {str(e)}")
             else:
                 st.error("Please fill in both fields")
     
     st.divider()
     
     # Show existing clients
-    if clients:
-        st.success(f"📊 {len(clients)} clients in database")
-        for client in clients:
-            st.write(f"• {client['name']} ({client['email']})")
-    else:
-        st.info("No clients yet. Add your first client above!")
-
+    try:
+        clients = database.get_all_clients()
+        if clients:
+            st.success(f"📊 {len(clients)} clients in database")
+            for client in clients:
+                st.write(f"• {client['name']} ({client['email']})")
+        else:
+            st.info("No clients yet. Add your first client above!")
+    except Exception as e:
+        st.warning("Client database not initialized. Clients will be available after first add.")
 # Main area
 st.header("Upload RFP Document")
 
