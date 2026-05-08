@@ -8,19 +8,16 @@ import os
 
 class RFPProcessor:
 def __init__(self):
-    """Initialize with CUTTING-EDGE models - Deep Research + Gemini 3.1"""
+    """Initialize with Gemini 2.5 Pro (stable production model)"""
     api_key = st.secrets.get("GEMINI_API_KEY")
     if not api_key:
         raise ValueError("GEMINI_API_KEY not found in secrets")
     
     genai.configure(api_key=api_key)
     
-    # Dual-model architecture for maximum power
-    # Use Deep Research for comprehensive RFP analysis
-    self.analysis_model = genai.GenerativeModel('deep-research-pro-preview-12-2025')
-    
-    # Use Gemini 3.1 Pro for advanced proposal generation
-    self.generation_model = genai.GenerativeModel('gemini-3.1-pro-preview')
+    # Use stable Gemini 2.5 Pro for both analysis and generation
+    self.analysis_model = genai.GenerativeModel('gemini-2.5-pro')
+    self.generation_model = genai.GenerativeModel('gemini-2.5-pro')
 
 def analyze_requirements(self, file_path):
     """Analyze RFP requirements using DEEP RESEARCH"""
