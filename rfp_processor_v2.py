@@ -14,8 +14,7 @@ class RFPProcessor:
             raise ValueError("GEMINI_API_KEY not found in secrets")
         
         genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('gemini-1.5-flash')
-    
+        self.model = genai.GenerativeModel('gemini-2.0-flash-exp')  # Latest experimental model    
     def extract_text_from_pdf(self, pdf_path):
         """Extract text from PDF file"""
         try:
