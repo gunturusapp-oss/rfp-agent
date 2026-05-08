@@ -12,7 +12,7 @@ class RFPProcessor:
         if not api_key:
             raise ValueError("GEMINI_API_KEY not found")
         genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('gemini-2.5-pro')
+        self.model = genai.GenerativeModel('gemini-2.5-flash')
     
     def extract_text_from_pdf(self, pdf_path):
         try:
