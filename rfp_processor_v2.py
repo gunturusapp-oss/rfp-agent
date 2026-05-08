@@ -74,7 +74,7 @@ class RFPProcessor:
         Best regards,
         {company}
         {address}
-        sandeep@aviksoft.com"""
+        venkatguntur90@gmail.com"""
         
         response = self.model.generate_content(prompt)
         return response.text
@@ -100,7 +100,10 @@ Thank you for the opportunity to submit our proposal for {project_name}.
 
 Best regards,
 AVIKSOFT LLC
-sandeep@aviksoft.com"""
+Mesa, AZ 85204
+venkatguntur90@gmail.com
+(Note: This email is sent from venkatguntur90@gmail.com  on behalf of AVIKSOFT LLC)
+""""""
             
             msg.attach(MIMEText(body, 'plain'))
             
