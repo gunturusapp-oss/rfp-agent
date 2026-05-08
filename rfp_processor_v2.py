@@ -100,10 +100,8 @@ Thank you for the opportunity to submit our proposal for {project_name}.
 
 Best regards,
 AVIKSOFT LLC
-Mesa, AZ 85204
-venkatguntur90@gmail.com
-(Note: This email is sent from venkatguntur90@gmail.com  on behalf of AVIKSOFT LLC)
-""""""
+1819 E Southern Ave, Suite D-20, Mesa, AZ 85204
+venkatguntur90@gmail.com"""
             
             msg.attach(MIMEText(body, 'plain'))
             
