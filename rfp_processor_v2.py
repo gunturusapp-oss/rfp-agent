@@ -7,101 +7,167 @@ from email.mime.multipart import MIMEMultipart
 import os
 
 class RFPProcessor:
-    def __init__(self):
-        """Initialize the RFP Processor with Gemini API"""
-        api_key = st.secrets.get("GEMINI_API_KEY")
-        if not api_key:
-            raise ValueError("GEMINI_API_KEY not found in secrets")
-        
-        genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('gemini-2.0-flash-exp')  # Latest experimental model    
-    def extract_text_from_pdf(self, pdf_path):
-        """Extract text from PDF file"""
-        try:
-            reader = PdfReader(pdf_path)
-            text = ""
-            for page in reader.pages:
-                text += page.extract_text()
-            return text
-        except Exception as e:
-            raise Exception(f"Error reading PDF: {str(e)}")
+   def __init__(self):
+     """Initialize with CUTTING-EDGE models"""
+     api_key = st.secrets.get("GEMINI_API_KEY")
+     if not api_key:
+        raise ValueError("GEMINI_API_KEY not found in secrets")
     
-    def analyze_requirements(self, file_path):
-        """Analyze RFP requirements using Gemini"""
-        # Extract text
-        if file_path.endswith('.pdf'):
-            rfp_text = self.extract_text_from_pdf(file_path)
-        else:
-            with open(file_path, 'r') as f:
-                rfp_text = f.read()
-        
-        # Analyze with Gemini
-        prompt = f"""
-        Analyze this RFP document and extract key requirements:
-        
-        {rfp_text[:8000]}  # Limit to avoid token limits
-        
-        Provide a structured analysis of:
-        1. Project scope and objectives
-        2. Key requirements and deliverables
-        3. Timeline and deadlines
-        4. Budget constraints (if mentioned)
-        5. Evaluation criteria
-        
-        Be concise and focus on the most important details.
-        """
-        
-        response = self.model.generate_content(prompt)
-        return response.text
+     genai.configure(api_key=api_key)
     
-    def generate_response(self, analysis, project_name, client_name):
-        """Generate a professional RFP response"""
-        company_name = st.secrets.get("COMPANY_NAME", "AVIKSOFT LLC")
-        company_address = st.secrets.get("COMPANY_ADDRESS", "1819 E Southern Ave, Suite D-20, Mesa, AZ 85204")
-        
-        prompt = f"""
-        You are writing a professional RFP response proposal for {company_name}.
-        
-        Project: {project_name}
-        Client: {client_name}
-        
-        Based on this RFP analysis:
-        {analysis}
-        
-        Write a compelling, professional proposal that includes:
-        
-        1. EXECUTIVE SUMMARY
-        - Brief overview of our understanding and proposed solution
-        
-        2. UNDERSTANDING OF REQUIREMENTS
-        - Demonstrate clear comprehension of project needs
-        
-        3. PROPOSED APPROACH
-        - Detailed methodology and implementation plan
-        - Timeline and milestones
-        
-        4. QUALIFICATIONS
-        - Our expertise in construction management and SAP systems
-        - Relevant experience with similar projects
-        
-        5. VALUE PROPOSITION
-        - Why we're the best choice
-        - Competitive advantages
-        
-        6. NEXT STEPS
-        - Clear call to action
-        
-        Make it professional, persuasive, and tailored to the client's needs.
-        Use proper business formatting with clear sections.
-        
-        Sign off as:
-        {company_name}
-        {company_address}
-        """
-        
-        response = self.model.generate_content(prompt)
-        return response.text
+    # Use Deep Research for comprehensive RFP analysis
+     self.analysis_model = genai.GenerativeModel('deep-research-pro-preview-12-2025')
     
+    # Use Gemini 3.1 Pro for proposal generation
+     self.generation_model = genai.GenerativeModel('gemini-3.1-pro-preview')
+
+def analyze_requirements(self, file_path):
+    """Analyze RFP requirements using DEEP RESEARCH"""
+    # Extract text
+    if file_path.endswith('.pdf'):
+        rfp_text = self.extract_text_from_pdf(file_path)
+    else:
+        with open(file_path, 'r') as f:
+            rfp_text = f.read()
+    
+    # Use DEEP RESEARCH model for comprehensive analysis
+    prompt = f"""
+    Perform a COMPREHENSIVE deep research analysis of this RFP document:
+    
+    {rfp_text[:30000]}
+    
+    Provide an in-depth analysis including:
+    
+    1. PROJECT UNDERSTANDING
+    - Full scope and objectives
+    - Industry context and trends
+    - Client's strategic goals
+    
+    2. DETAILED REQUIREMENTS
+    - Technical specifications
+    - Deliverables and milestones
+    - Compliance and standards
+    - Hidden requirements (read between the lines)
+    
+    3. COMPETITIVE LANDSCAPE
+    - Likely competitors for this RFP
+    - What they'll propose
+    - Our differentiation opportunities
+    
+    4. EVALUATION CRITERIA ANALYSIS
+    - How proposals will be scored
+    - Weighted factors
+    - Winning strategies
+    
+    5. RISK ASSESSMENT
+    - Project risks
+    - Client concerns
+    - Mitigation strategies
+    
+    6. MARKET INTELLIGENCE
+    - Industry benchmarks
+    - Typical pricing for similar projects
+    - Success factors
+    
+    7. STRATEGIC RECOMMENDATIONS
+    - Key win themes
+    - Proposal positioning
+    - Unique value propositions
+    
+    Be thorough, strategic, and research-backed.
+    """
+    
+    # Use the DEEP RESEARCH model
+    response = self.analysis_model.generate_content(prompt)
+    return response.text
+
+def generate_response(self, analysis, project_name, client_name):
+    """Generate proposal using Gemini 3.1 Pro"""
+    company_name = st.secrets.get("COMPANY_NAME", "AVIKSOFT LLC")
+    company_address = st.secrets.get("COMPANY_ADDRESS", "1819 E Southern Ave, Suite D-20, Mesa, AZ 85204")
+    
+    prompt = f"""
+    You are writing a WORLD-CLASS RFP response proposal for {company_name}.
+    
+    PROJECT: {project_name}
+    CLIENT: {client_name}
+    
+    DEEP RESEARCH ANALYSIS:
+    {analysis}
+    
+    Create a comprehensive, strategically-positioned, WINNING proposal with:
+    
+    # EXECUTIVE SUMMARY
+    - Compelling value proposition that addresses client's strategic goals
+    - Why we're uniquely positioned to succeed
+    - Key differentiators (2-3 powerful paragraphs)
+    
+    # UNDERSTANDING & APPROACH
+    - Demonstrate deep comprehension of requirements
+    - Show we understand their business challenges
+    - Our strategic approach and methodology
+    
+    # PROPOSED SOLUTION
+    - Detailed technical approach
+    - Implementation timeline with milestones
+    - Quality assurance and risk mitigation
+    - Innovation and competitive advantages
+    
+    # QUALIFICATIONS & EXPERIENCE
+    - Our expertise in construction management and SAP systems
+    - Relevant past projects and success metrics
+    - Team credentials and capabilities
+    - Why our experience matters for THIS project
+    
+    # PROJECT MANAGEMENT
+    - Communication strategy
+    - Risk management framework
+    - Change control process
+    - Success metrics and KPIs
+    
+    # VALUE PROPOSITION
+    - ROI and business impact
+    - Cost-benefit analysis
+    - Long-term partnership value
+    - Unique competitive advantages
+    
+    # TIMELINE & DELIVERABLES
+    - Detailed project schedule
+    - Key milestones and checkpoints
+    - Quality gates and review points
+    
+    # WHY CHOOSE {company_name}
+    - Strategic differentiators
+    - Client success stories with metrics
+    - Commitment and guarantees
+    
+    # NEXT STEPS
+    - Clear call to action
+    - Proposed meeting structure
+    - Contact information
+    
+    REQUIREMENTS:
+    - Professional, confident tone
+    - Specific and data-driven (not generic)
+    - Address ALL evaluation criteria from analysis
+    - Incorporate competitive intelligence
+    - Show deep understanding of their business
+    - Use metrics and concrete examples
+    - Make it WINNING and PERSUASIVE
+    
+    Close professionally:
+    
+    We look forward to partnering with you on this transformative project.
+    
+    Best regards,
+    {company_name}
+    {company_address}
+    sandeep@aviksoft.com
+    """
+    
+    # Use Gemini 3.1 Pro for generation
+    response = self.generation_model.generate_content(prompt)
+    return response.text    
     def send_email_response(self, recipient_email, project_name, proposal_text):
         """Send the proposal via email"""
         try:
