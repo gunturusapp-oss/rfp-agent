@@ -67,18 +67,25 @@ with st.sidebar:
                 st.error("Please fill in both fields")
     
     st.divider()
+
+# Client selection
+st.subheader("Select Client")
+try:
+    clients = database.get_all_clients()
+    if clients:
+        client_options = {client['name']: client['id'] for client in clients}
+        selected_client = st.selectbox(
+            "Choose client for this proposal",
+            options=list(client_options.keys())
+        )
+        selected_client_id = client_options[selected_client] if selected_client else None
+    else:
+        st.info("👆 Add a client in the sidebar first!")
+        selected_client_id = None
+except:
+    st.warning("No clients available. Add one in the sidebar!")
+    selected_client_id = None
     
-    # Show existing clients
-    try:
-        clients = database.get_all_clients()
-        if clients:
-            st.success(f"📊 {len(clients)} clients in database")
-            for client in clients:
-                st.write(f"• {client['name']} ({client['email']})")
-        else:
-            st.info("No clients yet. Add your first client above!")
-    except Exception as e:
-        st.warning("Client database not initialized. Clients will be available after first add.")
 # Main area
 st.header("Upload RFP Document")
 
