@@ -3,17 +3,13 @@ Multi-Client RFP Processor - Vela AI
 Integrates with Gemini API + Gmail
 """
 
-import os
+import google.generativeai as genai
+import streamlit as st
+from PyPDF2 import PdfReader
 import smtplib
-from datetime import datetime
-from pathlib import Path
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from email.mime.base import MIMEBase
-from email import encoders
-
-import google.generativeai as genai
-from client_database import ClientDatabase
+import os
 
 # Import PDF parsing
 try:
