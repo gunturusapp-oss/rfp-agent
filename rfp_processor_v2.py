@@ -47,7 +47,7 @@ class RFPProcessor:
         response = self.model.generate_content(prompt)
         return response.text
     
-  def generate_response(self, analysis, project_name, client_name):
+def generate_response(self, analysis, project_name, client_name):
     company = st.secrets.get("COMPANY_NAME", "AVIKSOFT LLC")
     address = st.secrets.get("COMPANY_ADDRESS", "1819 E Southern Ave, Mesa, AZ 85204")
     
@@ -59,50 +59,54 @@ class RFPProcessor:
     RFP ANALYSIS:
     {analysis}
     
-    Create a professional proposal with:
-    - Executive Summary
-    - Understanding of Requirements
-    - Proposed Solution with timeline
-    - Qualifications and Experience
-    - Value Proposition
-    - Why Choose Us
-    - Next Steps
+    Create a professional proposal with these sections:
+    1. Executive Summary
+    2. Understanding of Requirements
+    3. Proposed Solution with timeline
+    4. Qualifications and Experience
+    5. Value Proposition
+    6. Why Choose Us
+    7. Next Steps
     
     Make it persuasive and professional.
-    Do NOT include a signature - just end with the Next Steps section."""
+    
+    End with this EXACT signature format:
+    
+    Best regards,
+    
+    AVIKSOFT LLC
+    1819 E Southern Ave, Suite D-20
+    Mesa, AZ 85204
+    venkatguntur90@gmail.com"""
     
     response = self.model.generate_content(prompt)
     return response.text
+
+def send_email_response(self, recipient_email, project_name, proposal_text):
+    try:
+        sender = st.secrets.get("GMAIL_USER")
+        password = st.secrets.get("GMAIL_APP_PASSWORD")
     
-    def send_email_response(self, recipient_email, project_name, proposal_text):
-        try:
-            sender = st.secrets.get("GMAIL_USER")
-            password = st.secrets.get("GMAIL_APP_PASSWORD")
-            
-            if not sender or not password:
-                raise ValueError("Email credentials not configured")
-            
-            msg = MIMEMultipart()
-            msg['From'] = sender
-            msg['To'] = recipient_email
-            msg['Subject'] = f"Proposal for {project_name} - AVIKSOFT LLC"
-            
-            body = f"""Dear Client,
+        if not sender or not password:
+            raise ValueError("Email credentials not configured")
+    
+        msg = MIMEMultipart()
+        msg['From'] = sender
+        msg['To'] = recipient_email
+        msg['Subject'] = f"Proposal for {project_name} - AVIKSOFT LLC"
+
+        # Simple wrapper - proposal already has signature
+        body = f"""Dear Client,
 
 Thank you for the opportunity to submit our proposal for {project_name}.
 
-{proposal_text}
+{proposal_text}"""
 
-Best regards,
-AVIKSOFT LLC
-1819 E Southern Ave, Suite D-20, Mesa, AZ 85204
-venkatguntur90@gmail.com"""
-            
-            msg.attach(MIMEText(body, 'plain'))
-            
-            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-                server.login(sender, password)
-                server.send_message(msg)
-                
-        except Exception as e:
-            raise Exception(f"Email failed: {str(e)}")
+        msg.attach(MIMEText(body, 'plain'))
+    
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+            server.login(sender, password)
+            server.send_message(msg)
+
+    except Exception as e:
+        raise Exception(f"Email failed: {str(e)}")
