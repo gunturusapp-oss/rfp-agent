@@ -70,33 +70,25 @@ def generate_response(self, analysis, project_name, client_name):
     
     Make it persuasive and professional.
     
-    CRITICAL: You MUST end with this EXACT text (copy it exactly):
-    
-    Best regards,
-    
-    AVIKSOFT LLC
-    1819 E Southern Ave, Suite D-20
-    Mesa, AZ 85204
-    sandeep@aviksoft.com
-    
-    DO NOT modify the signature. Include it EXACTLY as shown above."""
+    IMPORTANT: Do NOT include any signature block, contact information, or closing. 
+    End with the Next Steps section only."""
     
     response = self.model.generate_content(prompt)
     
-    # Add signature if Gemini forgot it
-    if "sandeep@aviksoft.com" not in response.text:
-        response_text = response.text.strip()
-        if not response_text.endswith("Best regards,"):
-            response_text += "\n\nBest regards,"
-        response_text += f"""
+    # Add clean signature at the end
+    proposal_with_signature = f"""{response.text.strip()}
+
+---
+
+Best regards,
 
 AVIKSOFT LLC
 1819 E Southern Ave, Suite D-20
 Mesa, AZ 85204
-sandeep@aviksoft.com"""
-        return response_text
+Phone: (480) 555-0123
+Email: sandeep@aviksoft.com"""
     
-    return response.text
+    return proposal_with_signature
 
 def send_email_response(self, recipient_email, project_name, proposal_text):
     try:
@@ -111,7 +103,7 @@ def send_email_response(self, recipient_email, project_name, proposal_text):
         msg['To'] = recipient_email
         msg['Subject'] = f"Proposal for {project_name} - AVIKSOFT LLC"
 
-        # Simple wrapper - proposal already has signature
+        # Simple clean wrapper
         body = f"""Dear Client,
 
 Thank you for the opportunity to submit our proposal for {project_name}.
