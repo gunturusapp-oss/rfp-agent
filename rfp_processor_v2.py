@@ -47,37 +47,32 @@ class RFPProcessor:
         response = self.model.generate_content(prompt)
         return response.text
     
-    def generate_response(self, analysis, project_name, client_name):
-        company = st.secrets.get("COMPANY_NAME", "AVIKSOFT LLC")
-        address = st.secrets.get("COMPANY_ADDRESS", "1819 E Southern Ave, Mesa, AZ 85204")
-        
-        prompt = f"""Write a comprehensive winning RFP proposal for {company}.
-        
-        PROJECT: {project_name}
-        CLIENT: {client_name}
-        
-        RFP ANALYSIS:
-        {analysis}
-        
-        Create a professional proposal with:
-        - Executive Summary
-        - Understanding of Requirements
-        - Proposed Solution with timeline
-        - Qualifications and Experience
-        - Value Proposition
-        - Why Choose Us
-        - Next Steps
-        
-        Make it persuasive and professional.
-        
-        Sign off:
-        Best regards,
-        {company}
-        {address}
-        venkatguntur90@gmail.com"""
-        
-        response = self.model.generate_content(prompt)
-        return response.text
+  def generate_response(self, analysis, project_name, client_name):
+    company = st.secrets.get("COMPANY_NAME", "AVIKSOFT LLC")
+    address = st.secrets.get("COMPANY_ADDRESS", "1819 E Southern Ave, Mesa, AZ 85204")
+    
+    prompt = f"""Write a comprehensive winning RFP proposal for {company}.
+    
+    PROJECT: {project_name}
+    CLIENT: {client_name}
+    
+    RFP ANALYSIS:
+    {analysis}
+    
+    Create a professional proposal with:
+    - Executive Summary
+    - Understanding of Requirements
+    - Proposed Solution with timeline
+    - Qualifications and Experience
+    - Value Proposition
+    - Why Choose Us
+    - Next Steps
+    
+    Make it persuasive and professional.
+    Do NOT include a signature - just end with the Next Steps section."""
+    
+    response = self.model.generate_content(prompt)
+    return response.text
     
     def send_email_response(self, recipient_email, project_name, proposal_text):
         try:
