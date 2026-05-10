@@ -1,3 +1,8 @@
 streamlit
 google-generativeai
 PyPDF2
+googlesearch-python
+beautifulsoup4
+requests
+gspread
+oauth2client

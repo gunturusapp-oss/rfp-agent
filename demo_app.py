@@ -32,7 +32,7 @@ st.markdown("""
 # Initialize processor
 @st.cache_resource
 def get_processor():
-    return RFPProcessor()
+    return RFPProcessorV3()
 
 processor = get_processor()
 
@@ -70,65 +70,75 @@ with col1:
     )
     
     # Generate button
-    if st.button("⚡ Generate Response", type="primary", use_container_width=True):
-        if not project_name:
-            st.error("❌ Please enter a project name")
-        elif not client_name:
-            st.error("❌ Please enter a client name")
-        elif not client_email:
-            st.error("❌ Please enter a client email")
-        elif not uploaded_file:
-            st.error("❌ Please upload an RFP document")
-        else:
-            with st.spinner("🤖 Analyzing RFP and generating proposal..."):
+                    
+if st.button("⚡ Generate Response", type="primary", use_container_width=True):
+    if not project_name:
+        st.error("❌ Please enter a project name")
+    elif not client_name:
+        st.error("❌ Please enter a client name")
+    elif not client_email:
+        st.error("❌ Please enter a client email")
+    elif not uploaded_file:
+        st.error("❌ Please upload an RFP document")
+    else:
+        with st.spinner("🤖 Analyzing RFP with AI intelligence..."):
+            try:
+                # Save uploaded file
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                file_path = f"data/uploads/{timestamp}_{uploaded_file.name}"
+                os.makedirs("data/uploads", exist_ok=True)
+                
+                with open(file_path, "wb") as f:
+                    f.write(uploaded_file.getbuffer())
+                
+                # Process RFP with research
+                st.info("📊 Step 1/3: Analyzing RFP requirements...")
+                analysis = processor.analyze_requirements(file_path)
+                
+                st.info("🔍 Step 2/3: Researching market intelligence...")
+                response = processor.generate_response_with_research(
+                    analysis,
+                    project_name=project_name,
+                    client_name=client_name
+                )
+                
+                st.info("🎯 Step 3/3: Scoring proposal quality...")
+                score = processor.score_proposal(response)
+                
+                # Display success
+                st.success("✅ Proposal generated successfully!")
+                
+                # Show quality score
+                with st.expander("📊 Proposal Quality Score", expanded=True):
+                    st.markdown(score)
+                
+                # Show preview
+                with st.expander("📄 View Generated Proposal", expanded=False):
+                    st.markdown(response)
+                
+                # Send email
                 try:
-                    # Save uploaded file
-                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                    file_path = f"data/uploads/{timestamp}_{uploaded_file.name}"
-                    os.makedirs("data/uploads", exist_ok=True)
-                    
-                    with open(file_path, "wb") as f:
-                        f.write(uploaded_file.getbuffer())
-                    
-                    # Process RFP
-                    analysis = processor.analyze_requirements(file_path)
-                    response = processor.generate_response(
-                        analysis,
-                        project_name=project_name,
-                        client_name=client_name
+                    processor.send_email_response(
+                        client_email,
+                        project_name,
+                        response
                     )
-                    
-                    # Display success
-                    st.success("✅ Proposal generated successfully!")
-                    
-                    # Show preview
-                    with st.expander("📄 View Generated Proposal", expanded=True):
-                        st.markdown(response)
-                    
-                    # Send email
-                    try:
-                        processor.send_email_response(
-                            client_email,
-                            project_name,
-                            response
-                        )
-                        st.success(f"📧 Proposal sent to {client_email}")
-                    except Exception as e:
-                        st.warning(f"⚠️ Proposal generated but email failed: {str(e)}")
-                        st.info("💡 You can copy the proposal above and send it manually")
-                    
-                    # Download button
-                    st.download_button(
-                        label="⬇️ Download Proposal",
-                        data=response,
-                        file_name=f"{project_name.replace(' ', '_')}_proposal.txt",
-                        mime="text/plain"
-                    )
-                    
+                    st.success(f"📧 Proposal sent to {client_email}")
                 except Exception as e:
-                    st.error(f"❌ Error generating proposal: {str(e)}")
-                    st.info("💡 Please check your Gemini API key in Streamlit secrets")
-
+                    st.warning(f"⚠️ Proposal generated but email failed: {str(e)}")
+                    st.info("💡 You can copy the proposal above and send it manually")
+                
+                # Download button
+                st.download_button(
+                    label="⬇️ Download Proposal",
+                    data=response,
+                    file_name=f"{project_name.replace(' ', '_')}_proposal.txt",
+                    mime="text/plain"
+                )
+                
+            except Exception as e:
+                st.error(f"❌ Error generating proposal: {str(e)}")
+                st.info("💡 Please check your configuration")
 with col2:
     st.header("How It Works")
     
